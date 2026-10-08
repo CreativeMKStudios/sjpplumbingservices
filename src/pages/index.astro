@@ -1,0 +1,204 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../data/site";
+import { services } from "../data/services";
+import { photos } from "../data/photos";
+import { faqs, homeReviews } from "../data/reviews";
+import { areas, nearbyPlaces } from "../data/areas";
+import { breadcrumbNode, faqNode, localBusinessNode } from "../data/schema";
+
+const preview = photos.filter((photo) => photo.group !== "older").slice(0, 6);
+const description =
+  "SJP Plumbing & Property Services Ltd, based in Elstow, Bedford. Bathrooms, kitchens, plumbing, carpentry, roofing and flooring. Call 07776 366341, Monday to Friday.";
+---
+
+<Base
+  title="Plumber in Bedford | SJP Plumbing & Property Services"
+  description={description}
+  path="/"
+  nodes={[localBusinessNode(), faqNode(faqs), breadcrumbNode([{ name: "Home", path: "/" }])]}
+>
+  <div class="hero-wrap">
+    <div class="wrap">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Trusted local plumbers</p>
+          <h1>We fix plumbing problems without the stress</h1>
+          <p class="lede">
+            A leak, a blocked waste, or a bathroom that needs ripping out. {site.legalName} works from Elstow, Bedford.
+            Call, say what is wrong, and we will tell you when we can come.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-yellow" href="/contact">Request a quote</a>
+            <a class="btn btn-ghost" href="/services">Our services</a>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <img
+            src="/images/work/kitchen-white-bar.webp"
+            width="1600"
+            height="1200"
+            alt="White kitchen with an oak breakfast bar fitted by SJP, from their Google profile"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Work we actually do</h2>
+        <p>
+          This is the list from the SJP Google profile: kitchen and bathroom installation, plumbing, carpentry, roofing, flooring, and more.
+          The photos on this site are the kitchens and bathrooms customers and the company have put on that profile.
+        </p>
+      </div>
+      <div class="cards">
+        {
+          services.map((service) => (
+            <a class="card" href={`/services/${service.slug}`}>
+              <div class="mark"></div>
+              <h3>{service.title}</h3>
+              <p>{service.summary}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow" style="color:#8a6a00">Why people book them again</p>
+        <h2>They turn up, they talk, and they tidy up</h2>
+        <p>
+          The Google rating is 5.0 from {site.reviewCount} reviews. Ten of those reviews are quoted on this site.
+          The same points come up again and again.
+        </p>
+        <div class="facts">
+          <div class="fact">
+            <p><strong>They come when they say.</strong> Sue Burrows wrote that they came when they said they would.</p>
+          </div>
+          <div class="fact">
+            <p><strong>They finish on the date they agreed.</strong> Alan Curtis said the en-suite was done by the agreed date, and they explained each step.</p>
+          </div>
+          <div class="fact">
+            <p><strong>They leave the house tidy.</strong> Louise Atkinson and Fiona Hubbard both mention that the place is left tidy.</p>
+          </div>
+        </div>
+      </div>
+      <img
+        src="/images/work/shower-loft.webp"
+        width="736"
+        height="1000"
+        alt="Walk-in shower under a sloping ceiling with a wood-effect wall"
+        decoding="async"
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Recent work from the Google profile</h2>
+        <p>
+          {site.photosOnGoogle} photos are on the Google listing. These are from the public page.
+          <a href="/projects">See the full set on this site</a>.
+        </p>
+      </div>
+      <div class="gallery">
+        {
+          preview.map((photo) => (
+            <figure>
+              <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} decoding="async" />
+              <figcaption>{photo.caption}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What customers wrote on Google</h2>
+        <p>All of these are 5-star reviews. The dates are the ones Google showed on {site.listingChecked}.</p>
+      </div>
+      <div class="quote-grid">
+        {
+          homeReviews.map((review) => (
+            <blockquote class="quote">
+              <div class="stars" aria-label="5 stars">★★★★★</div>
+              <p>{review.text}</p>
+              <footer>
+                <cite>{review.name}</cite> · Google review · {review.when}
+              </footer>
+            </blockquote>
+          ))
+        }
+      </div>
+      <p class="actions">
+        <a class="btn btn-navy" href="/reviews">Read the reviews</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Bedford and the villages around Elstow</h2>
+        <p>
+          The company is based in Elstow. Most calls are from Bedford and the places a short drive away.
+          If you are further out, phone and ask.
+        </p>
+      </div>
+      <ul class="area-pills">
+        {
+          nearbyPlaces.map((place) => {
+            const page = areas.find((area) => area.name === place);
+            return (
+              <li>
+                {page ? <a href={`/areas/${page.slug}`}>{place}</a> : <span>{place}</span>}
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Questions people ask first</h2>
+      </div>
+      <div class="faq">
+        {
+          faqs.map((item) => (
+            <details>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h2>Call {site.phoneDisplay}</h2>
+          <p>Monday to Friday, 8:00am to 5:00pm. Tell us the room, the problem, and the town.</p>
+        </div>
+        <a class="btn btn-yellow" href={`tel:${site.phoneTel}`}>Call now</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { addressLine, site } from "../data/site";
+import { breadcrumbNode, localBusinessNode } from "../data/schema";
+
+const description =
+  "About SJP Plumbing & Property Services Ltd. Company 13779769, based in Elstow, Bedford, run by Shaun Winconek and Jason Proud.";
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "About Us", path: "/about" },
+];
+---
+
+<Base
+  title="About Us"
+  description={description}
+  path="/about"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">About us</p>
+      <h1>A Bedford company, run by Shaun and Jay</h1>
+      <p>
+        {site.legalName} was set up on {site.incorporated}. The work on the Google profile is kitchens, bathrooms, plumbing, carpentry, roofing, and flooring.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+
+  <section class="section">
+    <div class="wrap split">
+      <div class="prose">
+        <h2>Who is on the paperwork</h2>
+        <p>
+          Companies House lists two directors, both appointed on 3 December 2021:
+        </p>
+        <ul>
+          <li>Shaun Jozef Winconek. Customers on Google call him Shaun.</li>
+          <li>Jason Robert Proud. Customers call him Jay, and Alan Curtis uses the name Jason.</li>
+        </ul>
+        <p>
+          The company number is {site.companyNumber}. It is registered in {site.jurisdiction}.
+          The registered office is {addressLine()}.
+        </p>
+        <p>
+          That address is a house, not a showroom. Google does not list a website, an email, or a shop you can walk into.
+          The phone number on the listing is {site.phoneDisplay}.
+        </p>
+        <h2>What the Google profile says</h2>
+        <p>
+          The business description on Google is short: a home improvement and development company, providing kitchen and bathroom installation, plumbing, carpentry, roofing, flooring, and more.
+          The categories are plumber, bathroom remodeler, kitchen remodeler, and carpenter.
+        </p>
+        <p>
+          Reviews also talk about central heating, radiators, a downstairs shower room, and a garage turned into a workshop.
+          A Gas Safe number is not on the public profile. Ask about gas work before you book it.
+        </p>
+        <h2>Hours</h2>
+        <p>
+          Monday to Friday, 8:00am to 5:00pm. Saturday and Sunday are closed. Those hours are from the Google listing, checked on {site.listingChecked}.
+        </p>
+      </div>
+      <img
+        src="/images/work/bathroom-gold-shower.webp"
+        width="1440"
+        height="1440"
+        alt="Narrow bathroom with a gold-framed shower and a brick wall"
+        decoding="async"
+      />
+    </div>
+  </section>
+</Base>

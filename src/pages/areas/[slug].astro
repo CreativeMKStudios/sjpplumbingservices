@@ -1,0 +1,63 @@
+---
+import Base from "../../layouts/Base.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { areas, getArea } from "../../data/areas";
+import { site } from "../../data/site";
+import { services } from "../../data/services";
+import { breadcrumbNode, localBusinessNode, serviceNode } from "../../data/schema";
+
+export function getStaticPaths() {
+  return areas.map((area) => ({ params: { slug: area.slug } }));
+}
+
+const area = getArea(Astro.params.slug ?? "");
+if (!area) throw new Error("Missing area");
+
+const path = `/areas/${area.slug}`;
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Areas", path: "/areas" },
+  { name: area.name, path },
+];
+const description = `${site.legalName} is based in Elstow and takes plumbing, bathroom and kitchen calls from ${area.name}. Phone ${site.phoneDisplay}.`;
+---
+
+<Base
+  title={`Plumber in ${area.name}`}
+  description={description}
+  path={path}
+  nodes={[
+    localBusinessNode(),
+    serviceNode({
+      name: `Plumbing in ${area.name}`,
+      description: area.summary,
+      path,
+    }),
+    breadcrumbNode(crumbs),
+  ]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">{area.name}</p>
+      <h1>Plumbing and home improvements in {area.name}</h1>
+      <p>{area.summary}</p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap prose">
+      {area.body.map((paragraph) => <p>{paragraph}</p>)}
+      <h2>Jobs people book</h2>
+      <ul>
+        {services.slice(0, 4).map((service) => (
+          <li>
+            <a href={`/services/${service.slug}`}>{service.title}</a>. {service.summary}
+          </li>
+        ))}
+      </ul>
+      <p>
+        <a class="btn btn-navy" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a>
+      </p>
+    </div>
+  </section>
+</Base>

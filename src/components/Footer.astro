@@ -1,0 +1,49 @@
+---
+import { addressLine, site } from "../data/site";
+import { services } from "../data/services";
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <h2>{site.legalName}</h2>
+      <p>
+        Registered office: {addressLine()}. This is not a trade counter. Call before you visit.
+      </p>
+      <p>
+        <a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a><br />
+        Monday to Friday, 8:00am to 5:00pm. Closed Saturday and Sunday.
+      </p>
+    </div>
+    <div>
+      <h2>Services</h2>
+      <ul>
+        {
+          services.map((service) => (
+            <li>
+              <a href={`/services/${service.slug}`}>{service.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/about">About us</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="/areas">Areas we cover</a></li>
+        <li><a href="/reviews">Google reviews</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href={site.mapsUrl} rel="noopener noreferrer">Google listing</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fine">
+    <p>
+      {site.legalName}. Company number {site.companyNumber}. Registered in {site.jurisdiction}. Incorporated {site.incorporated}.
+      Google listing checked {site.listingChecked}: 5.0 from {site.reviewCount} reviews.
+    </p>
+  </div>
+</footer>

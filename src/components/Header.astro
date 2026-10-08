@@ -1,0 +1,67 @@
+---
+import { nav, site } from "../data/site";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+function current(href: string) {
+  if (href === "/") return path === "/";
+  return path === href || path.startsWith(`${href}/`);
+}
+---
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <p>
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v6l4 2"></path>
+      </svg>
+      Working hours: Mon to Fri, 8:00am – 5:00pm
+    </p>
+    <p>
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"></path>
+        <circle cx="12" cy="10" r="2.2"></circle>
+      </svg>
+      Elstow, Bedford
+    </p>
+    <a href="/reviews">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+        <path d="m12 3 2.4 5.4 5.8.6-4.4 3.8 1.3 5.7L12 15.8 6.9 18.5l1.3-5.7L3.8 9l5.8-.6L12 3z"></path>
+      </svg>
+      5.0 from {site.reviewCount} Google reviews
+    </a>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="logo" href="/" aria-label="SJP Plumbing and Property Services, home">SJP<span class="dot">.</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" class="nav" aria-label="Main">
+      {
+        nav.map((item) => (
+          <a href={item.href} aria-current={current(item.href) ? "page" : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a class="phone-btn" href={`tel:${site.phoneTel}`} aria-label={`Call ${site.phoneDisplay}`}>
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6.5 3.5h3L11 8l-2 1.5a12 12 0 0 0 5.5 5.5L16 13l4.5 1.5v3A2 2 0 0 1 18.6 19 16 16 0 0 1 5 5.4a2 2 0 0 1 1.5-1.9z"></path>
+      </svg>
+      <span>{site.phoneDisplay}</span>
+    </a>
+  </div>
+</header>
+<script>
+  const button = document.querySelector(".nav-toggle");
+  const nav = document.querySelector("#site-nav");
+  button?.addEventListener("click", () => {
+    const open = button.getAttribute("aria-expanded") === "true";
+    button.setAttribute("aria-expanded", String(!open));
+    nav?.classList.toggle("is-open", !open);
+    button.textContent = open ? "Menu" : "Close";
+  });
+</script>

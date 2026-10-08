@@ -1,0 +1,63 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { photos } from "../data/photos";
+import { site } from "../data/site";
+import { breadcrumbNode, localBusinessNode } from "../data/schema";
+
+const description =
+  "Kitchen and bathroom photos from the SJP Plumbing Google profile in Bedford. 18 public photos, with a link to all 35 on Google.";
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Projects", path: "/projects" },
+];
+const groups = [
+  { id: "bathrooms", title: "Bathrooms and shower rooms", items: photos.filter((photo) => photo.group === "bathroom") },
+  { id: "kitchens", title: "Kitchens", items: photos.filter((photo) => photo.group === "kitchen") },
+  { id: "older", title: "Older rooms on the profile", items: photos.filter((photo) => photo.group === "older") },
+];
+---
+
+<Base
+  title="Projects"
+  description={description}
+  path="/projects"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Projects</p>
+      <h1>Photos from the Google profile</h1>
+      <p>
+        The listing shows {site.photosOnGoogle} photos. Google served these {photos.length} on the public page when we checked it on {site.listingChecked}.
+        The rest stay on the Google listing unless you are signed in.
+        We have not added stock photos, and we have not labelled a picture as a named job unless the photo itself shows it.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  {
+    groups.map((group) => (
+      <section class="section" id={group.id}>
+        <div class="wrap">
+          <h2>{group.title}</h2>
+          <div class="gallery">
+            {group.items.map((photo) => (
+              <figure>
+                <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} decoding="async" loading="lazy" />
+                <figcaption>{photo.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+  <section class="section alt">
+    <div class="wrap">
+      <p>
+        <a href={site.mapsUrl} rel="noopener noreferrer">Open the Google listing</a> to see every photo, including any that did not load here.
+      </p>
+    </div>
+  </section>
+</Base>
