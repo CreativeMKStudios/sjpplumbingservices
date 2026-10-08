@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../data/site";
+import { localBusinessNode } from "../data/schema";
+---
+
+<Base
+  title="Page not found"
+  description="That page is not on the SJP Plumbing site. Try the home page, or call 07776 366341."
+  path="/404"
+  noindex={true}
+  nodes={[localBusinessNode()]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">404</p>
+      <h1>That page is not here</h1>
+      <p>The link may be old. The home page, services, and contact page are the useful ones.</p>
+      <p class="actions">
+        <a class="btn btn-yellow" href="/">Back home</a>
+        <a class="btn btn-ghost" href={`tel:${site.phoneTel}`}>Call {site.phoneDisplay}</a>
+      </p>
+    </div>
+  </header>
+</Base>

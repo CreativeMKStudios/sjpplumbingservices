@@ -1,0 +1,113 @@
+---
+import Base from "../../layouts/Base.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { getService, services } from "../../data/services";
+import { photos } from "../../data/photos";
+import { reviews } from "../../data/reviews";
+import { site } from "../../data/site";
+import { breadcrumbNode, localBusinessNode, serviceNode } from "../../data/schema";
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug } }));
+}
+
+const { slug } = Astro.params;
+const service = getService(slug ?? "");
+if (!service) {
+  throw new Error("Missing service");
+}
+
+const relatedPhotos =
+  service.slug === "kitchens"
+    ? photos.filter((photo) => photo.group === "kitchen").slice(0, 3)
+    : service.slug === "bathrooms" || service.slug === "plumbing"
+      ? photos.filter((photo) => photo.group === "bathroom").slice(0, 3)
+      : [];
+
+const relatedReviews = reviews.filter((review) => {
+  const text = review.text.toLowerCase();
+  if (service.slug === "bathrooms") return /bathroom|ensuite|en-suite|shower/.test(text);
+  if (service.slug === "kitchens") return text.includes("kitchen");
+  if (service.slug === "plumbing") return /plumb|radiator|toilet|heating/.test(text);
+  if (service.slug === "carpentry") return /garage|workshop|kitchen|bathroom/.test(text);
+  return false;
+}).slice(0, 2);
+
+const path = `/services/${service.slug}`;
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Services", path: "/services" },
+  { name: service.nav, path },
+];
+const description = `${service.summary} ${site.legalName}, Elstow, Bedford. Call ${site.phoneDisplay}.`;
+---
+
+<Base
+  title={service.title}
+  description={description}
+  path={path}
+  nodes={[
+    localBusinessNode(),
+    serviceNode({ name: service.title, description: service.lead, path }),
+    breadcrumbNode(crumbs),
+  ]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">{service.nav}</p>
+      <h1>{service.title} in Bedford</h1>
+      <p>{service.lead}</p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap prose">
+      <h2>What this covers</h2>
+      <ul>
+        {service.points.map((point) => <li>{point}</li>)}
+      </ul>
+      {service.note && <p class="notice">{service.note}</p>}
+      <p>
+        Hours are Monday to Friday, 8:00am to 5:00pm. Call <a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a> or
+        <a href="/contact">send a text from the contact page</a>.
+      </p>
+    </div>
+  </section>
+  {
+    relatedPhotos.length > 0 && (
+      <section class="section alt">
+        <div class="wrap">
+          <h2>Photos from the Google profile</h2>
+          <div class="gallery">
+            {relatedPhotos.map((photo) => (
+              <figure>
+                <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt} decoding="async" />
+                <figcaption>{photo.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+  {
+    relatedReviews.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <h2>Customers who mentioned this kind of job</h2>
+          <div class="quote-grid">
+            {relatedReviews.map((review) => (
+              <blockquote class="quote">
+                <div class="stars" aria-label="5 stars">★★★★★</div>
+                <p>{review.text}</p>
+                <footer>
+                  <cite>{review.name}</cite> · Google review · {review.when}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>

@@ -1,0 +1,54 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { reviews } from "../data/reviews";
+import { site } from "../data/site";
+import { breadcrumbNode, localBusinessNode } from "../data/schema";
+
+const description = `Google rating 5.0 from ${site.reviewCount} reviews for ${site.legalName} in Bedford. Ten reviews are quoted in full.`;
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Reviews", path: "/reviews" },
+];
+---
+
+<Base
+  title="Google reviews"
+  description={description}
+  path="/reviews"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Reviews</p>
+      <h1>5.0 from {site.reviewCount} Google reviews</h1>
+      <p>
+        Checked on {site.listingChecked}. Every review we could read was 5 stars.
+        {reviews.length} are quoted below in the customer’s own words.
+        Google did not load the other {site.reviewCount - reviews.length} without a sign-in, so they are not invented here.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap">
+      <div class="quote-grid">
+        {
+          reviews.map((review) => (
+            <blockquote class="quote">
+              <div class="stars" aria-label="5 stars">★★★★★</div>
+              <p>{review.text}</p>
+              <footer>
+                <cite>{review.name}</cite> · Google review · {review.when}
+              </footer>
+            </blockquote>
+          ))
+        }
+      </div>
+      <p class="actions">
+        <a class="btn btn-navy" href={site.mapsUrl} rel="noopener noreferrer">Read them on Google</a>
+        <a class="btn btn-yellow" href={site.writeReviewUrl} rel="noopener noreferrer">Write a review</a>
+      </p>
+    </div>
+  </section>
+</Base>

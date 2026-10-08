@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { addressLine, site } from "../data/site";
+import { breadcrumbNode, localBusinessNode } from "../data/schema";
+
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Privacy", path: "/privacy" },
+];
+const description = `Privacy notes for ${site.legalName}. No accounts, no email form, and the map loads only if you ask.`;
+---
+
+<Base
+  title="Privacy"
+  description={description}
+  path="/privacy"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Privacy</p>
+      <h1>What this site does with your information</h1>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap prose">
+      <p>
+        {site.legalName}, company number {site.companyNumber}, registered office {addressLine()}, is the business this site is about.
+      </p>
+      <h2>No account and no email form</h2>
+      <p>
+        You can read every page without giving your name. The quote form does not send your words to a server.
+        It opens a text message on your phone to {site.phoneDisplay}. If you send that text, it goes to the company like any other text.
+      </p>
+      <h2>Cookies</h2>
+      <p>
+        This site does not set its own analytics cookies. The map on the contact page stays unloaded until you press “Show the map”.
+        After that, Google may set cookies under its own rules.
+      </p>
+      <h2>Photos and reviews</h2>
+      <p>
+        Project photos and review quotes come from the public Google listing for {site.legalName}.
+        They are shown so customers can see the real work and the real comments. The listing was checked on {site.listingChecked}.
+      </p>
+    </div>
+  </section>
+</Base>

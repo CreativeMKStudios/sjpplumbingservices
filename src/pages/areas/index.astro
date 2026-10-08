@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { areas, nearbyPlaces } from "../../data/areas";
+import { site } from "../../data/site";
+import { breadcrumbNode, localBusinessNode } from "../../data/schema";
+
+const description =
+  "SJP Plumbing is based in Elstow and takes calls from Bedford, Kempston, Wixams, and the villages nearby. Call 07776 366341.";
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Areas", path: "/areas" },
+];
+---
+
+<Base
+  title="Areas we cover"
+  description={description}
+  path="/areas"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Local areas</p>
+      <h1>Based in Elstow, working around Bedford</h1>
+      <p>
+        Google does not publish a mile radius for {site.legalName}. The pin and the registered office are in Elstow.
+        These are the places a short drive from that base. If you live past them, call and ask. Do not assume a yes or a no from this list.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap">
+      <div class="cards">
+        {
+          areas.map((area) => (
+            <a class="card" href={`/areas/${area.slug}`}>
+              <div class="mark"></div>
+              <h2>{area.name}</h2>
+              <p>{area.summary}</p>
+            </a>
+          ))
+        }
+      </div>
+      <h2 style="margin-top:36px">Other places nearby</h2>
+      <p>These villages and towns are close to Elstow. There is no separate page for each one, on purpose. Thin copies of the same page do not help you, and they do not help search.</p>
+      <ul class="area-pills">
+        {
+          nearbyPlaces
+            .filter((place) => !areas.some((area) => area.name === place))
+            .map((place) => (
+              <li>
+                <span>{place}</span>
+              </li>
+            ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>

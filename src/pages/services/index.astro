@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { services } from "../../data/services";
+import { breadcrumbNode, localBusinessNode } from "../../data/schema";
+
+const description =
+  "Plumbing, bathrooms, kitchens, carpentry, roofing and flooring from SJP Plumbing & Property Services Ltd in Elstow, Bedford.";
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Services", path: "/services" },
+];
+---
+
+<Base
+  title="Services"
+  description={description}
+  path="/services"
+  nodes={[localBusinessNode(), breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Services</p>
+      <h1>Plumbing, kitchens, bathrooms, and the trades around them</h1>
+      <p>
+        Each service below is one SJP names on Google, or one that customers have described in a review. Prices depend on the house, so call 07776 366341.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap cards">
+      {
+        services.map((service) => (
+          <a class="card" href={`/services/${service.slug}`}>
+            <div class="mark"></div>
+            <h2>{service.title}</h2>
+            <p>{service.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

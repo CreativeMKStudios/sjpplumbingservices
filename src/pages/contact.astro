@@ -1,0 +1,117 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { addressLine, site } from "../data/site";
+import { services } from "../data/services";
+import { breadcrumbNode, localBusinessNode } from "../data/schema";
+
+const description = `Call SJP Plumbing on ${site.phoneDisplay}, Monday to Friday, 8am to 5pm. Based in Elstow, Bedford. No online price list.`;
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Contact Us", path: "/contact" },
+];
+const contactNode = {
+  "@type": "ContactPage",
+  url: `${(import.meta.env.SITE ?? "").replace(/\/$/, "")}/contact`,
+  mainEntity: { "@id": `${(import.meta.env.SITE ?? "").replace(/\/$/, "")}/#business` },
+};
+---
+
+<Base
+  title="Contact Us"
+  description={description}
+  path="/contact"
+  nodes={[localBusinessNode(), contactNode, breadcrumbNode(crumbs)]}
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>Call or text {site.phoneDisplay}</h1>
+      <p>
+        Monday to Friday, 8:00am to 5:00pm. Saturday and Sunday are closed.
+        There is no email address on the Google listing, so this form does not pretend to send one.
+      </p>
+    </div>
+  </header>
+  <Breadcrumbs items={crumbs} />
+  <section class="section">
+    <div class="wrap contact-grid">
+      <div>
+        <h2>Talk to Shaun or Jay</h2>
+        <p>
+          <a href={`tel:${site.phoneTel}`}><strong>{site.phoneDisplay}</strong></a>
+        </p>
+        <p>Registered office: {addressLine()}.</p>
+        <p>Please call before you visit. It is not a trade counter.</p>
+        <p>
+          <a href={site.mapsUrl} rel="noopener noreferrer">Open the Google listing</a>
+        </p>
+        <div class="map-slot" id="map-slot">
+          <div>
+            <p>The map loads from Google only after you ask for it.</p>
+            <button class="btn btn-navy" type="button" id="show-map">Show the map</button>
+          </div>
+        </div>
+      </div>
+      <form class="form" id="quote-form">
+        <h2>Request a quote by text</h2>
+        <p>Your phone will open a text to SJP. Nothing from this form is stored on the website.</p>
+        <label>
+          Your name
+          <input name="name" autocomplete="name" required />
+        </label>
+        <label>
+          Phone number
+          <input name="phone" type="tel" autocomplete="tel" required />
+        </label>
+        <label>
+          Town
+          <input name="town" autocomplete="address-level2" required />
+        </label>
+        <label>
+          Job
+          <select name="job" required>
+            <option value="">Choose one</option>
+            {services.map((service) => <option value={service.title}>{service.title}</option>)}
+            <option>Something else</option>
+          </select>
+        </label>
+        <label>
+          What is wrong, or what do you want done?
+          <textarea name="message" required></textarea>
+        </label>
+        <button class="btn btn-yellow" type="submit">Text this request</button>
+        <p id="form-result" class="form-note" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+</Base>
+<script>
+  const form = document.querySelector("#quote-form");
+  const result = document.querySelector("#form-result");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) return;
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "").trim();
+    const phone = String(data.get("phone") ?? "").trim();
+    const town = String(data.get("town") ?? "").trim();
+    const job = String(data.get("job") ?? "").trim();
+    const message = String(data.get("message") ?? "").trim();
+    const body = `Hello SJP. My name is ${name}. I am in ${town}. Job: ${job}. ${message} Please call me on ${phone}.`;
+    result.hidden = false;
+    result.textContent = `If a text does not open, call 07776 366341 and read this: ${body}`;
+    window.location.href = `sms:+447776366341?body=${encodeURIComponent(body)}`;
+  });
+
+  document.querySelector("#show-map")?.addEventListener("click", () => {
+    const slot = document.querySelector("#map-slot");
+    if (!slot) return;
+    const frame = document.createElement("iframe");
+    frame.title = "Map of SJP Plumbing and Property Services in Elstow, Bedford";
+    frame.loading = "lazy";
+    frame.referrerPolicy = "no-referrer-when-downgrade";
+    frame.src = "https://maps.google.com/maps?q=52.1215946,-0.5683796&z=15&output=embed&hl=en";
+    slot.replaceChildren(frame);
+  });
+</script>
